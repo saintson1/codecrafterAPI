@@ -112,6 +112,19 @@ namespace codecrafter_api
 
   std::string filesystem::content_node::get_name() { return name_; };
 
+  void filesystem::content_node::add_string_content( const std::string & new_string_content )
+  {
+    if (get_string_content().empty())
+      return;
+
+    for (auto & content : contents_)
+      if (std::get_if<std::string>(&content))
+        *std::get_if<std::string>(&content) += new_string_content;
+
+    return;
+  };
+
+
   filesystem::content_node * filesystem::req_search (const std::filesystem::path &entity)
   {
     try
@@ -128,6 +141,8 @@ namespace codecrafter_api
           std::string buf_line;
           while (std::getline(fs, buf_line))
             content += buf_line;
+          fs.close();
+
           return new content_node(entity.filename().generic_string(), content);
         }
         else if (std::filesystem::is_directory(entity))
@@ -210,16 +225,47 @@ namespace codecrafter_api
     return path_.filename().generic_string();
   };
 
-//--------------------------------------------------------------------
-
-  void filesystem::add_content( const std::string new_std_content )
+  int filesystem::add_content( const std::string & new_str_content )
   {
+    if (!std::filesystem::is_regular_file(path_))
+      return -1;
 
+    std::fstream fs;
+    fs.open(path_.generic_string(), std::ios::out | std::ios::app);
+    if (!fs.is_open())
+    {
+      fs.close();
+      throw std::runtime_error("file not open");
+    }
+
+    fs << new_str_content;
+    fs.close();
+
+    content_->add_string_content(new_str_content);
+    return 0;
   };
 
-  void filesystem::reset_content( const std::string new_std_content )
+  int filesystem::reset_content( const std::string & new_str_content )
   {
+    if (!std::filesystem::is_regular_file(path_))
+      return -1;
 
+    std::fstream fs;
+    fs.open(path_.generic_string(), std::ios::out);
+    if (!fs.is_open())
+    {
+      fs.close();
+      throw std::runtime_error("file not open");
+    }
+
+    fs << new_str_content;
+    fs.close();
+
+    delete content_;
+
+    content_ = new content_node(path_.filename().generic_string(), new_str_content);
+
+    return 0;
   };
 
   void filesystem::create_dir()
@@ -228,7 +274,7 @@ namespace codecrafter_api
       return;
     try
     {
-        std::filesystem::create_directories(path_);
+      std::filesystem::create_directories(path_);
     }
     catch(...)
     {
@@ -249,6 +295,7 @@ namespace codecrafter_api
     {
       throw;
     }
+
     return;
   };
 
@@ -269,7 +316,6 @@ namespace codecrafter_api
       if (!new_file.is_open())
         throw std::runtime_error("file w'not created");
       new_file.close();
-
     }
     catch(...)
     {

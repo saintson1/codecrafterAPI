@@ -7,20 +7,25 @@
 
 int main()
 {
-  // codecrafter_api::filesystem new_fs("");
-  // new_fs.create_dir();
 
-  // codecrafter_api::filesystem new_fs2("new_dir2");
-  // new_fs2.create_dir();
+  codecrafter_api::filesystem new_fs5("test/test.file");
+  new_fs5.create_file();
+  new_fs5.add_content("hw");
+  new_fs5.add_content("\nhw");
+  new_fs5.add_content("\nhw");
 
-  // codecrafter_api::filesystem new_fs3("new_dir");
-  // new_fs3.create_dir();
+  codecrafter_api::filesystem new_fs1("test/test2.file");
+  new_fs1.create_file();
+  new_fs1.add_content("hw\n");
+  new_fs1.reset_content("reset\nwwwwwww\nwwwwww\nwwwww\n");
+  // new_fs1.add_content("pupu\n");
 
-  // codecrafter_api::filesystem new_fs4("./new_dir/new_subdir");
-  // new_fs4.create_dir();
+  // codecrafter_api::filesystem new_fs2("test/test3.file");
+  // new_fs2.create_file();
+  // new_fs2.add_content();
+  // new_fs2.reset_content();
 
-  codecrafter_api::filesystem new_fs5(".////new");
-  new_fs5.create_dir();
+
 
 
   // boost::process::child child_proc("E:/visual_studio/subprocess/src/subprocess/build/Debug/subprocess.exe");

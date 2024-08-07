@@ -36,14 +36,16 @@ namespace codecrafter_api
       content_node_variant_type operator[]( int key );
       const std::vector<std::string> find_content( const std::string & find_name );
       std::string get_name();
+      void add_string_content( const std::string & new_string_content );
     };
 
   private:
     std::filesystem::path path_;
     content_node *content_;
-  public:
+
     std::string rought_path_name_ = "";
 
+  private:
     content_node * req_search( const std::filesystem::path &entity );
 
   public:
@@ -56,8 +58,8 @@ namespace codecrafter_api
     ~filesystem();
 
   public:
-    void add_content( const std::string new_std_content );
-    void reset_content( const std::string new_std_content );
+    int add_content( const std::string & new_std_content );
+    int reset_content( const std::string & new_std_content );
     std::string get_content() const;
     std::vector<content_node *> get_subfiles() const;
     std::string get_filename() const;
