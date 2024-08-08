@@ -1,37 +1,39 @@
-#define _WIN32_WINNT 0x0601
+#define _WIN32_WINNT 0x0A00
 
 #include <iostream>
 #include <string>
+
 #include <boost/process.hpp>
 
 #include "tools/filesystem/filesystem.hpp"
+#include "codecrafter/codecrafter.hpp"
 
 int main()
 {
-  codecrafter_api::filesystem new_tmp_file("tmp/cpp/test.cpp");
+  std::string code =
+R"code(#include <iostream>
+#include <exception>
 
-  new_tmp_file.create_file();
-  for (int beg = 1; beg <= 10    - 1; ++beg)
-  {
-    std::cout << new_tmp_file.add_content("new_line\n") << "\n";
-  }
+int main()
+{
+  std::cout << "asdfasdfasdfasdf\n";
+  int a = 90, b = 10;
+  std::cin >> a;
+  std::cin >> b;
+  std::cout << a + b;
 
-  // boost::process::child child_proc("E:/visual_studio/subprocess/src/subprocess/build/Debug/subprocess.exe");
+  throw std::runtime_error("misha pidpr");
 
-  // int cnt = 0;
-  // while (child_proc.running())
-  //   std::cout << cnt++ << "subprocess work!\n\n";
+  return 0;
+})code";
 
-  // while(1)
-  //   ;
+  std::string input =
+R"input(190
+23
+)input";
 
+  codecrafter_api::codecrafter cc(code, "cpp", input);
 
-  // child_proc.wait();
-
-  // int result = child_proc.exit_code();
-  // std::cout << result;
-  // while(1)
-  //   ;
-
+  std::cout << cc.get_res();
   return 0;
 }

@@ -177,27 +177,27 @@ namespace codecrafter_api
 
   filesystem::filesystem() : content_(nullptr) {  };
 
-  filesystem::filesystem(const std::string & path_name) : path_(std::filesystem::path(path_name)), content_(req_search(path_)), rought_path_name_(path_name) {  };
+  filesystem::filesystem(const std::string & path_name) : path_(std::filesystem::path(path_name)), content_(req_search(path_)), raw_path_name_(path_name) {  };
 
-  filesystem::filesystem(const filesystem & new_fs) : path_(new_fs.path_), content_(new content_node(*new_fs.content_)), rought_path_name_(new_fs.rought_path_name_) {  };
+  filesystem::filesystem(const filesystem & new_fs) : path_(new_fs.path_), content_(new content_node(*new_fs.content_)), raw_path_name_(new_fs.raw_path_name_) {  };
 
   filesystem & filesystem::operator=(const filesystem & new_fs)
   {
     path_ = new_fs.path_;
     content_ = new content_node(*new_fs.content_);
-    rought_path_name_ = new_fs.rought_path_name_;
+    raw_path_name_ = new_fs.raw_path_name_;
 
     return *this;
   };
 
-  filesystem::filesystem(filesystem && new_fs) : path_(std::move(new_fs.path_)), content_(new content_node(std::move(*new_fs.content_))), rought_path_name_(new_fs.rought_path_name_) { new_fs.content_ = nullptr; };
+  filesystem::filesystem(filesystem && new_fs) : path_(std::move(new_fs.path_)), content_(new content_node(std::move(*new_fs.content_))), raw_path_name_(new_fs.raw_path_name_) { new_fs.content_ = nullptr; };
 
   filesystem & filesystem::operator=(filesystem && new_fs)
   {
     path_ = std::move(new_fs.path_);
     content_ = new content_node(std::move(*new_fs.content_));
     new_fs.content_ = nullptr;
-    rought_path_name_ = new_fs.rought_path_name_;
+    raw_path_name_ = new_fs.raw_path_name_;
 
     return *this;
   };
@@ -228,6 +228,12 @@ namespace codecrafter_api
   {
     return path_.filename().generic_string();
   };
+
+  std::string filesystem::get_raw_full_name() const
+  {
+    return raw_path_name_;
+  };
+
 
   int filesystem::add_content( const std::string & new_str_content )
   {
@@ -279,7 +285,7 @@ namespace codecrafter_api
 
   void filesystem::create_dir()
   {
-    if (content_ || rought_path_name_ == "")
+    if (content_ || raw_path_name_ == "")
       return;
     try
     {
@@ -314,13 +320,13 @@ namespace codecrafter_api
       return get_content();
     try
     {
-      if (rought_path_name_ == "")
+      if (raw_path_name_ == "")
         throw std::runtime_error("invalid filename");
 
       filesystem().create_dir(path_.parent_path());
 
       std::fstream new_file;
-      new_file.open(rought_path_name_, std::ios::out);
+      new_file.open(raw_path_name_, std::ios::out);
 
       if (!new_file.is_open())
         throw std::runtime_error("file w'not created");
@@ -332,4 +338,14 @@ namespace codecrafter_api
     }
     return "";
   };
+
+    void filesystem::remove_all()
+    {
+      if (!std::filesystem::exists(path_))
+        return;
+
+      std::filesystem::remove_all(path_);
+      return;
+    };
+
 }

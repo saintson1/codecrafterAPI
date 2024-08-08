@@ -43,7 +43,7 @@ namespace codecrafter_api
     std::filesystem::path path_;
     content_node *content_;
 
-    std::string rought_path_name_ = "";
+    std::string raw_path_name_ = "";
 
   private:
     content_node * req_search( const std::filesystem::path &entity );
@@ -63,9 +63,12 @@ namespace codecrafter_api
     std::string get_content() const;
     std::vector<content_node *> get_subfiles() const;
     std::string get_filename() const;
+    std::string get_raw_full_name() const;
+
   public:
     void create_dir();
     std::string create_file();
+    void remove_all();
   private:
     void create_dir(std::filesystem::path new_path);
   };

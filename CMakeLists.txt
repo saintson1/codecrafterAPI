@@ -4,7 +4,7 @@ set(PROJECT_NAME codecrafter_api)
 set(SOURCE_DIR src)
 project(${PROJECT_NAME})
 
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -27,15 +27,17 @@ if(Boost_FOUND)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_DIR}/main.cpp)
-add_executable(parser ${SOURCE_DIR}/tools/parser/parser.cpp)
 
 add_library(filesystem ${SOURCE_DIR}/tools/filesystem/filesystem.cpp)
+add_library(codecrafter ${SOURCE_DIR}/codecrafter/codecrafter.cpp)
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE filesystem)
-target_link_libraries(parser PRIVATE filesystem)
+target_link_libraries(${PROJECT_NAME} PRIVATE codecrafter)
 
 if(Boost_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
+  target_link_libraries(codecrafter PRIVATE ${Boost_LIBRARIES})
 else()
   message("boost not found")
 endif()
