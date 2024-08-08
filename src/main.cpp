@@ -1,32 +1,20 @@
 #define _WIN32_WINNT 0x0601
 
 #include <iostream>
+#include <string>
 #include <boost/process.hpp>
 
 #include "tools/filesystem/filesystem.hpp"
 
 int main()
 {
+  codecrafter_api::filesystem new_tmp_file("tmp/cpp/test.cpp");
 
-  codecrafter_api::filesystem new_fs5("test/test.file");
-  new_fs5.create_file();
-  new_fs5.add_content("hw");
-  new_fs5.add_content("\nhw");
-  new_fs5.add_content("\nhw");
-
-  codecrafter_api::filesystem new_fs1("test/test2.file");
-  new_fs1.create_file();
-  new_fs1.add_content("hw\n");
-  new_fs1.reset_content("reset\nwwwwwww\nwwwwww\nwwwww\n");
-  // new_fs1.add_content("pupu\n");
-
-  // codecrafter_api::filesystem new_fs2("test/test3.file");
-  // new_fs2.create_file();
-  // new_fs2.add_content();
-  // new_fs2.reset_content();
-
-
-
+  new_tmp_file.create_file();
+  for (int beg = 1; beg <= 10    - 1; ++beg)
+  {
+    std::cout << new_tmp_file.add_content("new_line\n") << "\n";
+  }
 
   // boost::process::child child_proc("E:/visual_studio/subprocess/src/subprocess/build/Debug/subprocess.exe");
 
@@ -45,5 +33,5 @@ int main()
   // while(1)
   //   ;
 
-  // return 0;
+  return 0;
 }

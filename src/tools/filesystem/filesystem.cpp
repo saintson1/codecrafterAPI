@@ -7,6 +7,7 @@
 #include <variant>
 #include <ios>
 
+
 namespace codecrafter_api
 {
   filesystem::content_node::content_node( std::string new_name_, const content_node_variant_type & new_content)
@@ -75,6 +76,9 @@ namespace codecrafter_api
   std::vector<std::string> filesystem::content_node::get_string_content()
   {
     std::vector<std::string> string_content;
+
+    if (contents_.empty())
+      return string_content;
 
     for (auto & node : contents_)
       if (std::get_if<std::string>(&node))
@@ -228,7 +232,9 @@ namespace codecrafter_api
   int filesystem::add_content( const std::string & new_str_content )
   {
     if (!std::filesystem::is_regular_file(path_))
+    {
       return -1;
+    }
 
     std::fstream fs;
     fs.open(path_.generic_string(), std::ios::out | std::ios::app);
@@ -241,7 +247,10 @@ namespace codecrafter_api
     fs << new_str_content;
     fs.close();
 
-    content_->add_string_content(new_str_content);
+    if (!content_)
+      content_ = new content_node(path_.filename().generic_string(), new_str_content);
+    else
+      content_->add_string_content(new_str_content);
     return 0;
   };
 

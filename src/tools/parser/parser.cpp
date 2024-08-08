@@ -2,17 +2,20 @@
 #include <fstream>
 #include <ios>
 
+#include "../filesystem/filesystem.hpp"
+
 int main(int argc, char *argv[])
 {
+
   const std::string path = "";
-  std::fstream file("test.txt", std::ios_base::in);
 
-  file.open();
+  codecrafter_api::filesystem new_tmp_file("tmp/cpp/test.cpp");
 
-  for (int beg = 1; beg <= argc; ++beg)
-    std::cout << argv[beg] << " parser_ans\n";
+  new_tmp_file.create_file();
 
- file.close();
+  std::cout << argc << "\n";
+  for (int beg = 1; beg <= argc - 1; ++beg)
+    new_tmp_file.add_content(argv[beg]);
 
   return 0;
 }

@@ -27,10 +27,12 @@ if(Boost_FOUND)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_DIR}/main.cpp)
+add_executable(parser ${SOURCE_DIR}/tools/parser/parser.cpp)
 
 add_library(filesystem ${SOURCE_DIR}/tools/filesystem/filesystem.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE filesystem)
+target_link_libraries(parser PRIVATE filesystem)
 
 if(Boost_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
